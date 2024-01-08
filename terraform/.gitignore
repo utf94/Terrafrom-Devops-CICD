@@ -1,0 +1,11 @@
+.idea
+.vs_code
+.terraform
+terraform.tfvars
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+wav*.json
+inf*.json
+**/*.DS_Store
+*.DS_Store

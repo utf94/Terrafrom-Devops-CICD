@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: base-image-policy
+  namespace: flux-system
+spec:
+  filterTags:
+    pattern: '^[a-f0-9]{7}$' # This pattern matches a 7-character git SHA
+    extract: '$1'
+  policy:
+    alphabetical:
+      order: asc

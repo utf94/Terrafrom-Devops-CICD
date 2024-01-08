@@ -1,0 +1,50 @@
+serviceInfo:
+  name: "base"
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  backendConfig: "custom-backendconfig"
+
+resources:
+  limits:
+    nvidia.com/gpu: "1"
+  requests:
+    cpu: "4"
+    memory: "8Gi"
+
+containerPort: 8080
+
+startupProbe:
+  path: /healthz
+  periodSeconds: 60
+  failureThreshold: 30
+
+nodeSelector:
+  cloud.google.com/gke-accelerator: "nvidia-tesla-t4"
+
+tolerations: []
+
+affinity: {}
+
+image: repo:latest
+
+ecr_policy:
+  policy:
+    numerical:
+      order: asc
+  filterTags:
+    pattern: '^[a-f0-9]+-(?P<ts>[0-9]+)'
+    extract: '$ts'
+
+serviceAccountName: ""
+configMapData: {}
+pvc:
+  enabled: false
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+  mountPath: /data
+

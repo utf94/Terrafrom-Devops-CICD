@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-base
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "gce-internal"
+spec:
+  rules:
+    - host: placeholder.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: placeholder-service
+                port:
+                  number: 80

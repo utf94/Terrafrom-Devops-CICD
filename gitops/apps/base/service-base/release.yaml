@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: base
+  namespace: default
+spec:
+  releaseName: base
+  chart:
+    spec:
+      chart: charts/service-base
+      sourceRef:
+        kind: GitRepository
+        name: gitops
+        namespace: default
+  values:
+    image: repo:tag
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+    timeout: 10m0s
+  interval: 3m0s
+  timeout: 5m0s

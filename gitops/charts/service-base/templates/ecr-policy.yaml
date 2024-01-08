@@ -1,0 +1,13 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: {{ .Values.serviceInfo.name }}-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: {{ .Values.serviceInfo.name }}
+    namespace: default
+  filterTags:
+{{ toYaml .Values.ecr_policy.filterTags | indent 4 }}
+  policy:
+{{ toYaml .Values.ecr_policy.policy | indent 4 }}

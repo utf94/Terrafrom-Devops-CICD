@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-alpha
+  labels:
+    app.kubernetes.io/name: ingress-alpha
+spec:
+  rules:
+    - host: transformers.webaverse.studio
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: transformers-svc
+                port:
+                  name: http
+    - host: vectors.webaverse.studio
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vectors-svc
+                port:
+                  name: http

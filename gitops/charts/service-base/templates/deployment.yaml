@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.serviceInfo.name }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.serviceInfo.name }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app: "{{ .Values.serviceInfo.name }}"
+    spec:
+      serviceAccountName: {{ .Values.serviceAccountName  | quote }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      imagePullSecrets:
+        - name: ecr-credentials
+      containers:
+        - name: "{{ .Values.serviceInfo.name }}"
+          image: {{ .Values.image }} # {"$imagepolicy": "flux-system:{{ .Values.serviceInfo.name }}-policy"}
+          ports:
+            - name: "http"
+              containerPort: {{ .Values.containerPort }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.startupProbe.path }}
+              port: {{ .Values.containerPort }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          volumeMounts:
+          {{- if .Values.pvc.enabled }}
+            - mountPath: {{ .Values.pvc.mountPath }}
+              name: volume
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          envFrom:
+            - configMapRef:
+                name: "{{ .Values.serviceInfo.name }}-configmap"
+      volumes:
+      {{- if .Values.pvc.enabled }}
+        - name: volume
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
+      {{- end }}

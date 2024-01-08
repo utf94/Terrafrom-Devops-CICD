@@ -1,0 +1,28 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: eugene@karmazin.me
+        name: ekarmazin
+      messageTemplate: | 
+        Automatic update of images
+        {{ range .Updated.Images }}
+        - {{ . }}{{ end }}
+    push:
+      branch: main
+  update:
+    path: ./apps/production
+    strategy: Setters

@@ -1,0 +1,15 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: "{{ .Values.serviceInfo.name }}"
+  namespace: default
+spec:
+  suspend: false
+  image: {{ printf "%s" (split ":" .Values.image)._0 }}
+  interval: 1m0s
+  provider: generic
+  secretRef:
+    name: ecr-credentials
+  accessFrom:
+    namespaceSelectors:
+      - matchLabels: {}

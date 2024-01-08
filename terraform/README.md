@@ -1,0 +1,1 @@
+Refer to documentation for setup and usage at here: [Terraform](https://www.notion.so/webaverse/Terraform-IaC-20324c33d6cb42708f7ea66a7f2a9928)
